@@ -151,3 +151,80 @@ def test_run_checks_missing_rule_type(sample_df):
     assert result['status'] == 'error'
     assert result['rule_type'] is None
     assert "Missing 'type' in rule definition." in result['message']
+
+def test_run_checks_consistency_date_order(sample_df): # Using existing sample_df, will add date columns
+    # Add date columns to the sample_df for this test
+    sample_df['start_date'] = pd.to_datetime(['2023-01-01', '2023-01-01', '2023-01-01', '2023-01-05', '2023-01-01'])
+    sample_df['end_date'] = pd.to_datetime(['2023-01-02', '2023-01-02', '2022-12-31', '2023-01-04', '2023-01-03']) # One violation, one earlier end
+    
+    engine = AssessmentEngine(sample_df)
+    rules = [{
+        "type": "consistency_date_order_check", 
+        "column_a": "start_date", 
+        "column_b": "end_date"
+    }]
+    results = engine.run_checks(rules)
+    
+    assert len(results) == 1
+    result = results[0]
+    
+    assert result['rule_type'] == 'consistency_date_order_check'
+    # Verify the new 'column' format
+    expected_column_name = f"{rules[0]['column_a']} & {rules[0]['column_b']}"
+    assert result['column'] == expected_column_name
+    
+    # Check that the "Missing 'column' parameter" error is NOT present
+    if 'message' in result and result['message'] is not None: # Check if message key exists and is not None
+     assert "Missing 'column' parameter" not in result['message']
+
+    # Based on the data:
+    # Pair 0: 2023-01-01 <= 2023-01-02 (OK)
+    # Pair 1: 2023-01-01 <= 2023-01-02 (OK)
+    # Pair 2: 2023-01-01 > 2022-12-31 (VIOLATION)
+    # Pair 3: 2023-01-05 > 2023-01-04 (VIOLATION)
+    # Pair 4: 2023-01-01 <= 2023-01-03 (OK)
+    # valid_date_pairs_count = 5
+    # order_satisfied_count = 3
+    # order_violated_count = 2
+    assert result['status'] == 'failed' # Because there are violations
+    assert result['details']['valid_date_pairs_count'] == 5
+    assert result['details']['order_violated_count'] == 2
+    assert result['details']['order_satisfied_count'] == 3
+    
+    # Test with missing column_a in rule definition
+    rules_missing_col_a = [{"type": "consistency_date_order_check", "column_b": "end_date"}]
+    results_missing_col_a = engine.run_checks(rules_missing_col_a)
+    assert len(results_missing_col_a) == 1
+    result_missing_col_a = results_missing_col_a[0]
+    assert result_missing_col_a['status'] == 'error'
+    assert "Missing ''column_a'' in consistency_date_order_check rule." in result_missing_col_a['message']
+    # The 'column' field in case of error might be tricky, let's see what the engine does.
+    # The engine currently sets 'column_a' and 'column_b' fields in the error dict.
+    # The special formatting of 'column' is only for successful calls to the check function.
+    # So, 'column' might be None or not present if the rule definition itself is bad.
+    # Let's check the current engine behavior for the error case:
+    # It appends: {"rule_type": rule_type, "column_a": column_a_name, "column_b": column_b_name, "status": "error", ...}
+    # The reporter will then try to access 'column', which might be None.
+    # This is acceptable, as the error is about the rule definition, not the column data.
+    # The test should ensure 'column' is not the combined name for this error case.
+    assert result_missing_col_a.get('column') != f"None & end_date"
+
+
+    # Test with one of the date columns not existing in DataFrame (handled by check function)
+    rules_col_not_in_df = [{
+        "type": "consistency_date_order_check", 
+        "column_a": "start_date_typo", 
+        "column_b": "end_date"
+    }]
+    results_col_not_in_df = engine.run_checks(rules_col_not_in_df)
+    assert len(results_col_not_in_df) == 1
+    result_col_not_in_df = results_col_not_in_df[0]
+    assert result_col_not_in_df['status'] == 'error'
+    assert "Column(s) 'start_date_typo' not found in DataFrame." in result_col_not_in_df['message']
+    # Check the 'column' field in this specific error case (coming from the check function directly)
+    # The engine adds the f-string column if the check function was successfully called and returned.
+    # If the check function returns an error status (like column not found), it might not have 'column_a'/'column_b'
+    # or the engine still formats 'column'.
+    # Current implementation: check_function returns the error, engine formats 'column'.
+    expected_error_column_name = f"start_date_typo & end_date"
+    assert result_col_not_in_df['column'] == expected_error_column_name

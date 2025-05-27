@@ -68,16 +68,19 @@ class AssessmentEngine:
                     "details": None,
                 })
                 continue
-
-            if not column_name:
-                results.append({
-                    "rule_type": rule_type,
-                    "column": None,
-                    "status": "error",
-                    "message": f"Missing 'column' in {rule_type} rule.",
-                    "details": None,
-                })
-                continue
+            
+            # General 'column' validation, skipped for rules that don't use a single 'column' parameter.
+            # consistency_date_order_check uses column_a and column_b.
+            if rule_type not in ["consistency_date_order_check"]: # Add other multi-column rules here in future
+                if not column_name: # column_name is rule.get("column")
+                    results.append({
+                        "rule_type": rule_type,
+                        "column": None,
+                        "status": "error",
+                        "message": f"Missing 'column' parameter in {rule_type} rule definition.",
+                        "details": None,
+                    })
+                    continue
 
             # Specific argument handling for different check types
             if rule_type == "data_type":
@@ -149,7 +152,12 @@ class AssessmentEngine:
                         "details": None,
                     })
                     continue
-                result = check_function(self.dataframe, column_a_name, column_b_name)
+                raw_result = check_function(self.dataframe, column_a_name, column_b_name)
+                # Modify the result for reporting: Add a 'column' field with combined names.
+                result = {
+                    **raw_result, # Spread the original results from the check function
+                    'column': f"{column_a_name} & {column_b_name}" 
+                }
             elif rule_type == "validity_regex_match_check":
                 pattern = rule.get("pattern")
                 if not pattern: # pattern can be an empty string, but None or missing is an error
@@ -184,7 +192,8 @@ class AssessmentEngine:
                     })
                     continue
                 result = check_function(self.dataframe, column_name, start_date_str, end_date_str)
-            else: # For completeness and uniqueness (and any other single-column checks not requiring extra params beyond column_name)
+            else: # For completeness, uniqueness, and other single-column checks
+                # These checks are expected to return a dict that already includes 'column': column_name
                 result = check_function(self.dataframe, column_name)
             
             results.append(result)
