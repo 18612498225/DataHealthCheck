@@ -1,6 +1,14 @@
 import pytest
 import pandas as pd
-from data_quality_tool.checks import check_completeness, check_uniqueness, check_data_type
+from data_quality_tool.checks import (
+    check_completeness, 
+    check_uniqueness, 
+    check_data_type, 
+    check_accuracy_range, 
+    check_consistency_date_order, 
+    check_validity_regex, 
+    check_timeliness_fixed_range
+)
 
 # Sample DataFrames for testing
 @pytest.fixture
@@ -158,7 +166,7 @@ def test_check_accuracy_range_all_in_range(range_df):
     assert result_all_in['details']['non_numeric_rows'] == 0
     assert result_all_in['details']['in_range_count'] == 4
     assert result_all_in['details']['out_of_range_count'] == 0
-    assert result_all_in['details']['total_processed_rows'] == 4
+    assert result_all_in['details']['total_rows'] == 4
 
 
 def test_check_accuracy_range_some_low(range_df):
@@ -243,7 +251,7 @@ def test_check_accuracy_range_empty_dataframe():
     assert result['details']['non_numeric_rows'] == 0
     assert result['details']['in_range_count'] == 0
     assert result['details']['out_of_range_count'] == 0
-    assert result['details']['total_processed_rows'] == 0
+    assert result['details']['total_rows'] == 0
 
 def test_check_accuracy_range_column_not_found(range_df):
     result = check_accuracy_range(range_df, 'non_existent_col', 0, 100)
@@ -274,7 +282,7 @@ def test_check_accuracy_range_all_nulls():
     assert result['details']['non_numeric_rows'] == 0
     assert result['details']['in_range_count'] == 0
     assert result['details']['out_of_range_count'] == 0
-    assert result['details']['total_processed_rows'] == 5
+    assert result['details']['total_rows'] == 5
 
 # Tests for check_consistency_date_order
 @pytest.fixture
@@ -306,7 +314,7 @@ def test_date_order_all_good(date_order_df):
     assert result['details']['invalid_date_pairs_count'] == 0
     assert result['details']['order_satisfied_count'] == 3
     assert result['details']['order_violated_count'] == 0
-    assert result['details']['total_processed_rows'] == 3
+    assert result['details']['total_rows'] == 3
 
 def test_date_order_some_violated(date_order_df):
     # Using a slice of the fixture:
@@ -354,7 +362,7 @@ def test_date_order_some_violated(date_order_df):
     assert result['details']['invalid_date_pairs_count'] == 3
     assert result['details']['order_satisfied_count'] == 3
     assert result['details']['order_violated_count'] == 2
-    assert result['details']['total_processed_rows'] == 10
+    assert result['details']['total_rows'] == 10
 
 def test_date_order_equal_dates(date_order_df):
     df = pd.DataFrame({
@@ -434,14 +442,25 @@ def test_date_order_empty_dataframe():
 # Tests for check_validity_regex
 @pytest.fixture
 def regex_df():
+    # The longest list 'mixed_types' has 7 elements. Others have 6.
+    # Pad shorter lists with None to make all lists of length 7.
     data = {
         'emails': [
             'test@example.com', 'invalid-email', 'another.test@example.co.uk', 
-            None, 'test@sub.example.com', ''
-        ],
-        'codes': ['ABC-123', 'XYZ-789', 'DEF-456', 'GHI-000', 'abc-123', 'ABC-XYZ'],
-        'numbers_as_strings': ['123', '45.6', '7890', None, '0', 'NaN'],
-        'mixed_types': ['text1', 123, True, None, 'text2', 45.6, False]
+            None, 'test@sub.example.com', '', None
+        ],  # Length 7
+        'codes': [
+            'ABC-123', 'XYZ-789', 'DEF-456', 'GHI-000', 
+            'abc-123', 'ABC-XYZ', None
+        ],  # Length 7
+        'numbers_as_strings': [
+            '123', '45.6', '7890', None, 
+            '0', 'NaN', None
+        ],  # Length 7
+        'mixed_types': [
+            'text1', 123, True, None, 
+            'text2', 45.6, False
+        ]  # Length 7
     }
     return pd.DataFrame(data)
 
@@ -530,7 +549,7 @@ def test_regex_empty_dataframe():
     assert result['details']['applicable_rows_count'] == 0
     assert result['details']['matched_count'] == 0
     assert result['details']['non_matched_count'] == 0
-    assert result['details']['total_processed_rows'] == 0
+    assert result['details']['total_rows'] == 0
 
 def test_regex_column_not_found(regex_df):
     result = check_validity_regex(regex_df, 'non_existent_column', r'.*')
@@ -662,7 +681,7 @@ def test_timeliness_empty_dataframe():
     result = check_timeliness_fixed_range(df, 'dates', FIXED_START_DATE, FIXED_END_DATE)
     assert result['status'] == 'passed'
     assert "No data to assess." in result['message']
-    assert result['details']['total_processed_rows'] == 0
+    assert result['details']['total_rows'] == 0
     assert result['details']['parseable_column_dates_count'] == 0
     assert result['details']['unparseable_column_dates_count'] == 0
 
@@ -704,7 +723,7 @@ def test_timeliness_all_unparseable_column():
     assert result['details']['unparseable_column_dates_count'] == 3
     assert result['details']['in_range_count'] == 0
     assert result['details']['out_of_range_count'] == 0
-    assert result['details']['total_processed_rows'] == 0
+    assert result['details']['total_rows'] == 0
 
 def test_date_order_column_not_found(date_order_df):
     result_a_missing = check_consistency_date_order(date_order_df, 'non_existent_a', 'end_date')

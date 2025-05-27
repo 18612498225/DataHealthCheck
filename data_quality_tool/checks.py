@@ -43,7 +43,7 @@ def check_completeness(dataframe: pd.DataFrame, column_name: str) -> dict:
         "column": column_name,
         "status": status,
         "message": message,
-        "details": {"missing_count": int(missing_count), "total_processed_rows": total_processed_rows},
+        "details": {"missing_count": int(missing_count), "total_rows": total_processed_rows},
     }
 
 def check_uniqueness(dataframe: pd.DataFrame, column_name: str) -> dict:
@@ -90,7 +90,7 @@ def check_uniqueness(dataframe: pd.DataFrame, column_name: str) -> dict:
         "column": column_name,
         "status": status,
         "message": message,
-        "details": {"duplicate_count": int(duplicate_count), "total_processed_rows": total_processed_rows},
+        "details": {"duplicate_count": int(duplicate_count), "total_rows": total_processed_rows},
     }
 
 def check_data_type(dataframe: pd.DataFrame, column_name: str, expected_type: str) -> dict:
@@ -250,7 +250,7 @@ def check_accuracy_range(dataframe: pd.DataFrame, column_name: str, min_value: f
         'status': status,
         'message': message,
         'details': {
-            'total_processed_rows': len(dataframe), # Total rows in the input slice/dataframe
+            'total_rows': len(dataframe), # Total rows in the input slice/dataframe
             'valid_numeric_rows': int(valid_numeric_rows),
             'non_numeric_rows': int(non_numeric_rows), # Values that were not NaN but couldn't be converted
             'in_range_count': int(in_range_count),
@@ -387,7 +387,7 @@ def check_consistency_date_order(dataframe: pd.DataFrame, column_a_name: str, co
         'status': status,
         'message': message,
         'details': {
-            'total_processed_rows': len(dataframe),
+            'total_rows': len(dataframe),
             'valid_date_pairs_count': int(valid_date_pairs_count),
             'invalid_date_pairs_count': int(invalid_date_pairs_count),
             'order_satisfied_count': int(order_satisfied_count),
@@ -495,7 +495,7 @@ def check_validity_regex(dataframe: pd.DataFrame, column_name: str, pattern: str
         'status': status,
         'message': message,
         'details': {
-            'total_processed_rows': len(dataframe),
+            'total_rows': len(dataframe),
             'applicable_rows_count': int(applicable_rows_count), # Count of original non-null values
             'matched_count': int(matched_count),
             'non_matched_count': int(non_matched_count),
@@ -617,7 +617,7 @@ def check_timeliness_fixed_range(dataframe: pd.DataFrame, column_name: str, star
         'status': status,
         'message': message,
         'details': {
-            'total_processed_rows': len(dataframe),
+            'total_rows': len(dataframe),
             'parseable_column_dates_count': int(parseable_column_dates_count),
             'unparseable_column_dates_count': int(unparseable_column_dates_count),
             'in_range_count': int(in_range_count),
