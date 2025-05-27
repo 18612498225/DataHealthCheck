@@ -175,8 +175,15 @@ pytest
 
 如果您希望添加新的数据质量检查类型：
 
-1.  **定义新的检查函数**: 在 `data_quality_tool/checks.py` 文件中添加您的新检查逻辑。该函数应接受一个 Pandas DataFrame 和其他必要的参数 (如列名)，并返回一个包含检查结果的字典。
-2.  **集成到评估引擎**: 修改 `data_quality_tool/assessment_engine.py` 中的 `AssessmentEngine` 类的 `run_checks` 方法。添加一个新的 `elif` 条件来处理您的新规则类型，并调用您在 `checks.py` 中创建的函数。
+1.  **定义新的检查函数**:
+    *   在 `data_quality_tool/checks.py` 文件中添加您的新检查逻辑。
+    *   该函数应接受一个 Pandas DataFrame 和其他必要的参数 (如列名，具体取决于您的检查逻辑)，并返回一个包含检查结果的字典。此字典应遵循与其他检查函数一致的结构 (例如, 包含 `rule_type`, `column`, `status`, `message`, `details`)。
+2.  **集成到评估引擎**:
+    *   修改 `data_quality_tool/assessment_engine.py` 中的 `AssessmentEngine` 类的 `run_checks` 方法。
+    *   在 `run_checks` 方法中，为您的新规则类型添加处理逻辑。如果您遵循了后续的重构建议（使用字典映射规则类型到函数），这可能意味着向该字典添加一个新条目。如果仍是 `if/elif` 结构，则添加一个新的 `elif` 条件来识别您的新规则类型并调用您在 `checks.py` 中创建的相应检查函数。
+3.  **添加单元测试**:
+    *   为您的新检查函数在 `tests/test_checks.py` 中创建单元测试。
+    *   如果适用，更新 `tests/test_assessment_engine.py` 中的测试，以确保评估引擎能正确处理您的新规则类型。
 
 确保为您的新检查类型添加相应的单元测试。
 ```

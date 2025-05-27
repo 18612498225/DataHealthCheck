@@ -1,4 +1,5 @@
 import pandas as pd
+from .checks import check_completeness, check_uniqueness, check_data_type
 
 class AssessmentEngine:
     """
@@ -12,6 +13,11 @@ class AssessmentEngine:
             dataframe: The pandas DataFrame to be assessed.
         """
         self.dataframe = dataframe
+        self.check_functions = {
+            "completeness": check_completeness,
+            "uniqueness": check_uniqueness,
+            "data_type": check_data_type,
+        }
 
     def run_checks(self, rules: list) -> list:
         """
@@ -26,62 +32,57 @@ class AssessmentEngine:
         """
         results = []
         for rule in rules:
-            if rule.get("type") == "completeness":
-                column_name = rule.get("column")
-                if column_name:
-                    # Assuming check_completeness is imported
-                    # from .checks import check_completeness
-                    # For now, let's define it here or ensure it's available
-                    # For simplicity in this step, let's assume it's globally available
-                    # or we will import it.
-                    # To make it runnable, I will import it from the checks module
-                    from .checks import check_completeness, check_uniqueness, check_data_type # Updated import
-                    result = check_completeness(self.dataframe, column_name)
-                    results.append(result)
-                else:
-                    results.append({
-                        "rule_type": "completeness",
-                        "column": None,
-                        "status": "error",
-                        "message": "Missing 'column' in completeness rule.",
-                        "details": None,
-                    })
-            elif rule.get("type") == "uniqueness":
-                column_name = rule.get("column")
-                if column_name:
-                    result = check_uniqueness(self.dataframe, column_name)
-                    results.append(result)
-                else:
-                    results.append({
-                        "rule_type": "uniqueness",
-                        "column": None,
-                        "status": "error",
-                        "message": "Missing 'column' in uniqueness rule.",
-                        "details": None,
-                    })
-            elif rule.get("type") == "data_type":
-                column_name = rule.get("column")
+            rule_type = rule.get("type")
+            column_name = rule.get("column")
+            
+            check_function = self.check_functions.get(rule_type)
+
+            if not rule_type:
+                results.append({
+                    "rule_type": None,
+                    "column": column_name,
+                    "status": "error",
+                    "message": "Missing 'type' in rule definition.",
+                    "details": None,
+                })
+                continue
+
+            if not check_function:
+                results.append({
+                    "rule_type": rule_type,
+                    "column": column_name,
+                    "status": "error",
+                    "message": f"Unsupported rule type: '{rule_type}'.",
+                    "details": None,
+                })
+                continue
+
+            if not column_name:
+                results.append({
+                    "rule_type": rule_type,
+                    "column": None,
+                    "status": "error",
+                    "message": f"Missing 'column' in {rule_type} rule.",
+                    "details": None,
+                })
+                continue
+
+            # Specific argument handling for different check types
+            if rule_type == "data_type":
                 expected_type = rule.get("expected_type")
-                if column_name and expected_type:
-                    result = check_data_type(self.dataframe, column_name, expected_type)
-                    results.append(result)
-                elif not column_name:
+                if not expected_type:
                     results.append({
-                        "rule_type": "data_type",
-                        "column": None,
-                        "expected_type": expected_type,
-                        "status": "error",
-                        "message": "Missing 'column' in data_type rule.",
-                        "details": None,
-                    })
-                else: # Missing expected_type
-                    results.append({
-                        "rule_type": "data_type",
+                        "rule_type": rule_type,
                         "column": column_name,
                         "expected_type": None,
                         "status": "error",
-                        "message": "Missing 'expected_type' in data_type rule.",
+                        "message": f"Missing 'expected_type' in {rule_type} rule for column '{column_name}'.",
                         "details": None,
                     })
-            # Placeholder for other rule types
+                    continue
+                result = check_function(self.dataframe, column_name, expected_type)
+            else: # For completeness and uniqueness
+                result = check_function(self.dataframe, column_name)
+            
+            results.append(result)
         return results
