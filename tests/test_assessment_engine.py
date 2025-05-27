@@ -103,30 +103,51 @@ def test_run_checks_missing_column_in_rule(sample_df, capsys):
     assert len(results) == 1
     result = results[0]
     assert result['status'] == 'error'
-    assert "Missing 'column' in completeness rule" in result['message']
+    assert "Missing 'column' in completeness rule." in result['message'] # Adjusted assertion
 
     rules_dt = [{"type": "data_type", "expected_type": "int64"}] # Missing "column"
     results_dt = engine.run_checks(rules_dt)
     assert len(results_dt) == 1
     result_dt = results_dt[0]
     assert result_dt['status'] == 'error'
-    assert "Missing 'column' in data_type rule" in result_dt['message']
+    assert "Missing 'column' in data_type rule." in result_dt['message'] # Adjusted assertion
 
 
-def test_run_checks_missing_expected_type_in_rule(sample_df, capsys):
+def test_run_checks_missing_expected_type_in_rule(sample_df): # Removed capsys, not used
     engine = AssessmentEngine(sample_df)
     rules = [{"type": "data_type", "column": "age"}] # Missing "expected_type"
     results = engine.run_checks(rules)
     assert len(results) == 1
     result = results[0]
     assert result['status'] == 'error'
-    assert "Missing 'expected_type' in data_type rule" in result['message']
+    assert "Missing 'expected_type' in data_type rule for column 'age'." in result['message'] # Adjusted assertion
 
 def test_run_checks_column_not_in_dataframe(sample_df):
     engine = AssessmentEngine(sample_df)
+    # This will be caught by the check function itself, not the engine's pre-validation
     rules = [{"type": "completeness", "column": "non_existent_column"}]
     results = engine.run_checks(rules)
     assert len(results) == 1
     result = results[0]
+    assert result['status'] == 'error' # This is correct as check_completeness returns error
+    assert "Column 'non_existent_column' not found in DataFrame." in result['message'] # Adjusted assertion
+
+def test_run_checks_unsupported_rule_type(sample_df):
+    engine = AssessmentEngine(sample_df)
+    rules = [{"type": "non_existent_rule", "column": "id"}]
+    results = engine.run_checks(rules)
+    assert len(results) == 1
+    result = results[0]
     assert result['status'] == 'error'
-    assert "Column 'non_existent_column' not found" in result['message']
+    assert result['rule_type'] == 'non_existent_rule'
+    assert "Unsupported rule type: 'non_existent_rule'." in result['message']
+
+def test_run_checks_missing_rule_type(sample_df):
+    engine = AssessmentEngine(sample_df)
+    rules = [{"column": "id"}] # Missing "type"
+    results = engine.run_checks(rules)
+    assert len(results) == 1
+    result = results[0]
+    assert result['status'] == 'error'
+    assert result['rule_type'] is None
+    assert "Missing 'type' in rule definition." in result['message']
