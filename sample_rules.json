@@ -1,0 +1,5 @@
+[
+    {"type": "completeness", "column": "column_name_to_check_completeness"},
+    {"type": "uniqueness", "column": "column_name_to_check_uniqueness"},
+    {"type": "data_type", "column": "column_name_to_check_type", "expected_type": "int64"}
+]
