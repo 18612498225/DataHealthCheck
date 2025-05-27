@@ -125,13 +125,24 @@ python main.py tests/sample_data/good_data.csv good_data_rules.json -o good_data
     *   `"completeness"`: 检查列的完整性 (非空)。
     *   `"uniqueness"`: 检查列值的唯一性。
     *   `"data_type"`: 检查列的数据类型。
-*   `column` (字符串): 指定要应用此规则的数据列的名称。
+    *   `"accuracy_range_check"`: 检查数值是否在指定范围内。
+    *   `"consistency_date_order_check"`: 检查两个日期列的顺序是否正确 (例如，开始日期不晚于结束日期)。
+    *   `"validity_regex_match_check"`: 检查字符串值是否匹配正则表达式。
+    *   `"timeliness_fixed_range_check"`: 检查日期是否在固定的开始和结束日期之间。
+*   `column` (字符串): 对于大多数检查类型，此参数指定要应用规则的数据列的名称。对于 `consistency_date_order_check`，此参数不直接使用，而是使用 `column_a` 和 `column_b`。
 *   `expected_type` (字符串, 仅当 `type` 为 `"data_type"` 时必需): 指定期望的数据类型。常见的值包括：
     *   `"int64"` (整数)
     *   `"float64"` (浮点数)
     *   `"object"` (通常用于字符串)
     *   `"bool"` (布尔值)
     *   其他 Pandas 支持的数据类型字符串。
+*   `min_value` (数字, 仅当 `type` 为 `"accuracy_range_check"` 时必需): 允许的最小值 (包含边界)。
+*   `max_value` (数字, 仅当 `type` 为 `"accuracy_range_check"` 时必需): 允许的最大值 (包含边界)。
+*   `column_a` (字符串, 仅当 `type` 为 `"consistency_date_order_check"` 时必需): 第一个日期列的名称 (其日期应较早或相同)。
+*   `column_b` (字符串, 仅当 `type` 为 `"consistency_date_order_check"` 时必需): 第二个日期列的名称 (其日期应较晚或相同)。
+*   `pattern` (字符串, 仅当 `type` 为 `"validity_regex_match_check"` 时必需): 用于匹配的正则表达式。确保在 JSON 字符串中正确转义特殊字符 (例如, `\` 应写为 `\\`)。
+*   `start_date` (字符串, 仅当 `type` 为 `"timeliness_fixed_range_check"` 时必需): 允许范围的最早日期 (格式如 "YYYY-MM-DD")。
+*   `end_date` (字符串, 仅当 `type` 为 `"timeliness_fixed_range_check"` 时必需): 允许范围的最晚日期 (格式如 "YYYY-MM-DD")。
 
 #### 自定义规则文件示例
 
@@ -159,6 +170,28 @@ python main.py tests/sample_data/good_data.csv good_data_rules.json -o good_data
     {
         "type": "completeness",
         "column": "department"
+    },
+    {
+        "type": "accuracy_range_check",
+        "column": "age",
+        "min_value": 18,
+        "max_value": 65
+    },
+    {
+        "type": "consistency_date_order_check",
+        "column_a": "hire_date",
+        "column_b": "termination_date"
+    },
+    {
+        "type": "validity_regex_match_check",
+        "column": "employee_id",
+        "pattern": "^EMP\\d{3}$"
+    },
+    {
+        "type": "timeliness_fixed_range_check",
+        "column": "last_review_date",
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31"
     }
 ]
 ```

@@ -1,5 +1,13 @@
 import pandas as pd
-from .checks import check_completeness, check_uniqueness, check_data_type
+from .checks import (
+    check_completeness,
+    check_uniqueness,
+    check_data_type,
+    check_accuracy_range,
+    check_consistency_date_order,
+    check_validity_regex,
+    check_timeliness_fixed_range # Added new import
+)
 
 class AssessmentEngine:
     """
@@ -17,6 +25,10 @@ class AssessmentEngine:
             "completeness": check_completeness,
             "uniqueness": check_uniqueness,
             "data_type": check_data_type,
+            "accuracy_range_check": check_accuracy_range,
+            "consistency_date_order_check": check_consistency_date_order,
+            "validity_regex_match_check": check_validity_regex,
+            "timeliness_fixed_range_check": check_timeliness_fixed_range, # Added new check
         }
 
     def run_checks(self, rules: list) -> list:
@@ -81,7 +93,98 @@ class AssessmentEngine:
                     })
                     continue
                 result = check_function(self.dataframe, column_name, expected_type)
-            else: # For completeness and uniqueness
+            elif rule_type == "accuracy_range_check":
+                min_value = rule.get("min_value")
+                max_value = rule.get("max_value")
+                
+                if min_value is None or max_value is None: # Check if either is None
+                    missing_params = []
+                    if min_value is None:
+                        missing_params.append("'min_value'")
+                    if max_value is None:
+                        missing_params.append("'max_value'")
+                    
+                    results.append({
+                        "rule_type": rule_type,
+                        "column": column_name,
+                        "min_value": min_value,
+                        "max_value": max_value,
+                        "status": "error",
+                        "message": f"Missing {', '.join(missing_params)} in {rule_type} rule for column '{column_name}'.",
+                        "details": None,
+                    })
+                    continue
+                # Attempt to convert to float, in case they are provided as strings in JSON
+                try:
+                    min_value = float(min_value)
+                    max_value = float(max_value)
+                except ValueError:
+                    results.append({
+                        "rule_type": rule_type,
+                        "column": column_name,
+                        "min_value": rule.get("min_value"), # Show original values
+                        "max_value": rule.get("max_value"),
+                        "status": "error",
+                        "message": f"'min_value' and 'max_value' must be numbers for {rule_type} rule on column '{column_name}'.",
+                        "details": None,
+                    })
+                    continue
+                result = check_function(self.dataframe, column_name, min_value, max_value)
+            elif rule_type == "consistency_date_order_check":
+                column_a_name = rule.get("column_a") # Or a more generic name like 'first_column'
+                column_b_name = rule.get("column_b") # Or 'second_column'
+
+                if not column_a_name or not column_b_name:
+                    missing_params = []
+                    if not column_a_name:
+                        missing_params.append("'column_a'")
+                    if not column_b_name:
+                        missing_params.append("'column_b'")
+                    results.append({
+                        "rule_type": rule_type,
+                        "column_a": column_a_name,
+                        "column_b": column_b_name,
+                        "status": "error",
+                        "message": f"Missing {', '.join(missing_params)} in {rule_type} rule.",
+                        "details": None,
+                    })
+                    continue
+                result = check_function(self.dataframe, column_a_name, column_b_name)
+            elif rule_type == "validity_regex_match_check":
+                pattern = rule.get("pattern")
+                if not pattern: # pattern can be an empty string, but None or missing is an error
+                    results.append({
+                        "rule_type": rule_type,
+                        "column": column_name, # column_name is already validated to exist by this point
+                        "pattern": None,
+                        "status": "error",
+                        "message": f"Missing 'pattern' in {rule_type} rule for column '{column_name}'.",
+                        "details": None,
+                    })
+                    continue
+                result = check_function(self.dataframe, column_name, pattern)
+            elif rule_type == "timeliness_fixed_range_check":
+                start_date_str = rule.get("start_date")
+                end_date_str = rule.get("end_date")
+                
+                if not start_date_str or not end_date_str:
+                    missing_params = []
+                    if not start_date_str:
+                        missing_params.append("'start_date'")
+                    if not end_date_str:
+                        missing_params.append("'end_date'")
+                    results.append({
+                        "rule_type": rule_type,
+                        "column": column_name,
+                        "start_date": start_date_str,
+                        "end_date": end_date_str,
+                        "status": "error",
+                        "message": f"Missing {', '.join(missing_params)} in {rule_type} rule for column '{column_name}'.",
+                        "details": None,
+                    })
+                    continue
+                result = check_function(self.dataframe, column_name, start_date_str, end_date_str)
+            else: # For completeness and uniqueness (and any other single-column checks not requiring extra params beyond column_name)
                 result = check_function(self.dataframe, column_name)
             
             results.append(result)
