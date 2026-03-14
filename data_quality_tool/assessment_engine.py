@@ -69,7 +69,8 @@ class AssessmentEngine:
                 })
                 continue
 
-            if not column_name:
+            # consistency_date_order_check 使用 column_a/column_b，不要求 column
+            if rule_type != "consistency_date_order_check" and not column_name:
                 results.append({
                     "rule_type": rule_type,
                     "column": None,

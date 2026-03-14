@@ -1,0 +1,6 @@
+id,name,age,email,salary,hire_date,end_date
+1,Alice,30,alice@example.com,50000,2023-01-15,2023-12-31
+2,,24,bob@example.com,45000,2023-03-01,2023-11-30
+2,Charlie,70,charlie@example.com,120000,2023-02-10,2022-10-15
+4,Diana,28,invalid-email,55000,2023-05-01,2023-12-01
+5,Eve,32,eve@company.com,48000,2024-06-15,2023-09-30

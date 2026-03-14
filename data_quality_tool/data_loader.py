@@ -1,6 +1,8 @@
+from typing import Optional
 import pandas as pd
 
-def load_csv_data(file_path: str) -> pd.DataFrame | None:
+
+def load_csv_data(file_path: str) -> Optional[pd.DataFrame]:
     """
     Load data from a CSV file.
 

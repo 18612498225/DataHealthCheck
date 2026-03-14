@@ -690,18 +690,18 @@ def test_timeliness_column_not_found(timeliness_df):
     assert result['status'] == 'error'
     assert "Column 'non_existent' not found" in result['message']
 
-def test_timeliness_invalid_start_date_param():
+def test_timeliness_invalid_start_date_param(timeliness_df):
     result = check_timeliness_fixed_range(timeliness_df, 'event_date', 'invalid-date-string', FIXED_END_DATE)
     assert result['status'] == 'error'
     assert "Invalid start_date or end_date parameter format." in result['message']
 
-def test_timeliness_invalid_end_date_param():
+def test_timeliness_invalid_end_date_param(timeliness_df):
     result = check_timeliness_fixed_range(timeliness_df, 'event_date', FIXED_START_DATE, 'another-invalid-date')
     assert result['status'] == 'error'
     assert "Invalid start_date or end_date parameter format." in result['message']
 
-def test_timeliness_start_date_after_end_date_param():
-    result = check_timeliness_fixed_range(timeliness_df, 'event_date', FIXED_END_DATE, FIXED_START_DATE) # Swapped
+def test_timeliness_start_date_after_end_date_param(timeliness_df):
+    result = check_timeliness_fixed_range(timeliness_df, 'event_date', FIXED_END_DATE, FIXED_START_DATE)  # Swapped
     assert result['status'] == 'error'
     assert "Start date cannot be after end date." in result['message']
 

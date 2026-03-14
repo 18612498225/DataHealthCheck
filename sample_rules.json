@@ -1,37 +1,11 @@
 [
-    {
-        "type": "completeness", 
-        "column": "column_name_to_check_completeness"
-    },
-    {
-        "type": "uniqueness", 
-        "column": "column_name_to_check_uniqueness"
-    },
-    {
-        "type": "data_type", 
-        "column": "column_name_to_check_type", 
-        "expected_type": "int64"
-    },
-    {
-        "type": "accuracy_range_check",
-        "column": "numeric_column_to_check_range",
-        "min_value": 0,
-        "max_value": 100
-    },
-    {
-        "type": "consistency_date_order_check",
-        "column_a": "start_date_column",
-        "column_b": "end_date_column"
-    },
-    {
-        "type": "validity_regex_match_check",
-        "column": "string_column_to_check_pattern",
-        "pattern": "^[A-Za-z0-9_]+$"
-    },
-    {
-        "type": "timeliness_fixed_range_check",
-        "column": "date_column_to_check_timeliness",
-        "start_date": "2023-01-01",
-        "end_date": "2023-12-31"
-    }
+  { "type": "completeness", "column": "id" },
+  { "type": "completeness", "column": "name" },
+  { "type": "uniqueness", "column": "id" },
+  { "type": "data_type", "column": "age", "expected_type": "int64" },
+  { "type": "accuracy_range_check", "column": "age", "min_value": 18, "max_value": 65 },
+  { "type": "accuracy_range_check", "column": "salary", "min_value": 40000, "max_value": 100000 },
+  { "type": "validity_regex_match_check", "column": "email", "pattern": ".+@.+" },
+  { "type": "consistency_date_order_check", "column_a": "hire_date", "column_b": "end_date" },
+  { "type": "timeliness_fixed_range_check", "column": "hire_date", "start_date": "2023-01-01", "end_date": "2023-12-31" }
 ]

@@ -16,7 +16,17 @@
 
 ```
 .
-├── data_quality_tool/  # 核心源代码目录
+├── backend/              # FastAPI 后端（数据质量平台）
+│   ├── app/              # API、服务、模型
+│   │   ├── api/v1/       # 数据源、规则集、任务、报告、剖析、用户、认证
+│   │   ├── services/     # 数据加载、评估、报告、剖析
+│   │   └── models/       # 数据源、规则集、任务、用户、角色
+│   ├── data/             # 示例数据与测试数据
+│   ├── start.ps1         # 后端启动脚本（PowerShell）
+│   ├── seed_data.py      # 初始化种子数据
+│   └── requirements.txt
+├── frontend/             # Vue3 + Element Plus 前端
+├── data_quality_tool/    # 核心引擎（CLI 使用）
 │   ├── __init__.py
 │   ├── assessment_engine.py # 评估引擎，执行检查规则
 │   ├── checks.py            # 包含各种数据质量检查函数
@@ -32,6 +42,11 @@
 ├── main.py               # 命令行界面入口脚本
 ├── requirements.txt      # 项目依赖包列表
 ├── sample_rules.json     # 规则文件示例
+├── docs/                 # 项目文档
+│   ├── PRD_数据质量评估产品需求文档.md
+│   ├── 技术文档_数据质量平台PC版.md
+│   ├── 升级改造计划_中国数据质量评估整体方案.md
+│   └── 环境配置-Anaconda.md
 └── README.md             # 项目说明文件
 ```
 
@@ -40,6 +55,11 @@
 *   `main.py`: 提供命令行界面，用户通过此脚本与工具交互。
 *   `requirements.txt`:列出了运行本项目所需的所有 Python 依赖库。
 *   `sample_rules.json`: 提供了一个规则配置文件的示例，用户可以参考此文件创建自己的规则。
+
+## 环境要求
+
+*   **Python**: 3.8 或更高版本
+*   **依赖**: 见 `requirements.txt`
 
 ## 安装与设置
 
@@ -67,7 +87,48 @@
     pip install -r requirements.txt
     ```
 
-## 使用方法
+## 数据质量平台（Web 版）
+
+### 启动后端
+
+**Windows 用户**：在 `backend` 目录下执行 PowerShell 脚本，或命令行执行：
+```powershell
+cd backend
+.\start.ps1
+```
+
+**或手动执行**：
+```bash
+cd backend
+pip install -r requirements.txt
+python -m app.db.init_db
+python seed_data.py
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### 启动前端
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+浏览器打开 http://localhost:5173 ，默认登录账号 **admin / admin**。功能包括：
+
+- **仪表盘**：质量概览、最近任务、统计卡片
+- **数据源管理**：新增/编辑/删除数据源，支持 CSV、Excel，测试连接
+- **规则集管理**：新增/编辑/删除规则集，JSON 规则编辑器
+- **执行任务**：推荐组合快速测试（全规则通过、空值检测等 10 种），或自定义数据源与规则集
+- **报告**：按任务选择查看报告，支持下载 HTML/JSON，符合中国数据质量标准格式
+- **数据剖析**：选择数据源执行剖析，查看列级统计与规则推荐
+- **用户管理**：多用户、多角色（管理员/评估员/查看者），登录后展示用户信息
+
+### 内置测试数据
+
+启动后自动加载 10 个数据源、10 个规则集。`backend/data/` 下含：good_data、data_with_nulls、data_with_duplicates、employees_demo、all_rules_pass、dates_order_sample、timeliness_sample、dates_order_violations、timeliness_violations、all_rules_violations。覆盖 7 类规则：完整性、唯一性、数据类型、数值范围、正则、日期顺序、时效性。
+
+## 使用方法（CLI）
 
 通过命令行运行 `main.py` 脚本来使用本工具。
 

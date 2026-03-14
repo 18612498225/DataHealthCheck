@@ -1,0 +1,84 @@
+/**
+ * 全局样式 - Material Design 3 风格
+ */
+@import './design-tokens.css';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font: var(--md-typescale-body-medium);
+  color: #1f2937;
+  background: var(--md-sys-color-background);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 页面容器通用 */
+.page-container {
+  padding: var(--md-spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: var(--md-spacing-lg);
+}
+
+.page-title {
+  font: var(--md-typescale-headline-large);
+  color: #111827;
+  margin: 0 0 var(--md-spacing-xs) 0;
+  font-weight: 600;
+}
+
+.page-subtitle {
+  font: var(--md-typescale-body-medium);
+  color: #6b7280;
+  margin: 0;
+}
+
+/* M3 风格卡片 */
+.m3-card {
+  background: var(--md-sys-color-surface);
+  border-radius: var(--md-sys-shape-corner-medium);
+  box-shadow: var(--md-sys-elevation-1);
+  padding: var(--md-spacing-lg);
+  transition: box-shadow 0.2s ease;
+}
+
+.m3-card:hover {
+  box-shadow: var(--md-sys-elevation-2);
+}
+
+.m3-card-header {
+  font: var(--md-typescale-title-large);
+  color: #111827;
+  margin: 0 0 var(--md-spacing-md) 0;
+  padding-bottom: var(--md-spacing-sm);
+  border-bottom: 1px solid var(--md-sys-color-outline);
+}
+
+/* 统计数字 */
+.stat-value {
+  font: 500 2rem/2.5rem 'Noto Sans SC', 'Roboto', sans-serif;
+  color: var(--md-sys-color-primary);
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font: var(--md-typescale-body-medium);
+  color: #6b7280;
+  margin-top: var(--md-spacing-xs);
+}
+
+/* 过渡动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}

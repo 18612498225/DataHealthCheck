@@ -1,0 +1,101 @@
+/**
+ * Element Plus 主题覆盖 - 适配 Material Design 3
+ */
+:root {
+  --el-color-primary: #1976d2;
+  --el-color-primary-light-3: #42a5f5;
+  --el-color-primary-light-5: #64b5f6;
+  --el-color-primary-light-7: #90caf9;
+  --el-color-primary-light-8: #bbdefb;
+  --el-color-primary-light-9: #e3f2fd;
+  --el-color-primary-dark-2: #1565c0;
+  --el-border-radius-base: 8px;
+  --el-font-family: 'Noto Sans SC', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 卡片圆角与阴影 */
+.el-card {
+  border-radius: var(--md-sys-shape-corner-medium) !important;
+  box-shadow: var(--md-sys-elevation-1) !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+}
+
+.el-card:hover {
+  box-shadow: var(--md-sys-elevation-2) !important;
+}
+
+.el-card__header {
+  font: var(--md-typescale-title-large) !important;
+  font-weight: 600 !important;
+  padding: var(--md-spacing-md) var(--md-spacing-lg) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline) !important;
+}
+
+.el-card__body {
+  padding: var(--md-spacing-lg) !important;
+}
+
+/* 按钮 */
+.el-button {
+  border-radius: var(--md-sys-shape-corner-small) !important;
+  font-weight: 500 !important;
+}
+
+.el-button--primary {
+  box-shadow: 0 1px 3px rgba(25, 118, 210, 0.3) !important;
+}
+
+/* 表格 */
+.el-table {
+  --el-table-border-color: var(--md-sys-color-outline) !important;
+  --el-table-header-bg-color: var(--md-sys-color-surface-dim) !important;
+}
+
+.el-table th.el-table__cell {
+  font-weight: 600 !important;
+  color: #374151 !important;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td {
+  background: var(--md-sys-color-surface-dim) !important;
+}
+
+/* 输入框 */
+.el-input__wrapper {
+  border-radius: var(--md-sys-shape-corner-small) !important;
+  box-shadow: 0 0 0 1px var(--md-sys-color-outline) inset !important;
+}
+
+.el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--md-sys-color-primary) inset !important;
+}
+
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 2px var(--md-sys-color-primary) inset !important;
+}
+
+/* 标签 */
+.el-tag {
+  border-radius: var(--md-sys-shape-corner-full) !important;
+  font-weight: 500 !important;
+}
+
+/* 对话框 */
+.el-dialog {
+  border-radius: var(--md-sys-shape-corner-large) !important;
+  box-shadow: var(--md-sys-elevation-3) !important;
+}
+
+.el-dialog__header {
+  font: var(--md-typescale-title-large) !important;
+  font-weight: 600 !important;
+  padding: var(--md-spacing-lg) !important;
+}
+
+.el-dialog__body {
+  padding: var(--md-spacing-md) var(--md-spacing-lg) !important;
+}
+
+.el-dialog__footer {
+  padding: var(--md-spacing-md) var(--md-spacing-lg) var(--md-spacing-lg) !important;
+}

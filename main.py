@@ -1,9 +1,7 @@
 import argparse
 import json
-import sys # Import sys for exiting
-import pandas as pd # Though not directly used, good for consistency
+import sys
 
-# Project specific imports
 from data_quality_tool.data_loader import load_csv_data
 from data_quality_tool.assessment_engine import AssessmentEngine
 from data_quality_tool.reporter import generate_text_report

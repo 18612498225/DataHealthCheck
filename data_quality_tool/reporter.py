@@ -31,7 +31,11 @@ def generate_text_report(results: list, output_file_path: str = None):
     for result in results:
         report_lines.append("--- Check Result ---")
         report_lines.append(f"Rule Type: {result.get('rule_type')}")
-        report_lines.append(f"Column: {result.get('column')}")
+        # consistency_date_order_check 使用 column_a/column_b，优先展示
+        if 'column_a' in result and 'column_b' in result:
+            report_lines.append(f"Columns: {result.get('column_a')} / {result.get('column_b')}")
+        else:
+            report_lines.append(f"Column: {result.get('column')}")
         # Handle cases where 'expected_type' or 'actual_type' might be present (for data_type check)
         if 'expected_type' in result:
             report_lines.append(f"Expected Type: {result.get('expected_type')}")
