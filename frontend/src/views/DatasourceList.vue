@@ -1,3 +1,9 @@
+<!--
+  文件名: DatasourceList.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 数据源管理，增删改查、测试连接
+-->
 <template>
   <div class="page-container">
     <PageHeader title="数据源管理" subtitle="配置 CSV、Excel、PostgreSQL、MySQL 等数据源">

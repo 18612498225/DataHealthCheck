@@ -1,4 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: checks.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据质量检查函数，完整性、唯一性、类型、范围、正则、日期等
+"""
 import pandas as pd
+
 
 def check_completeness(dataframe: pd.DataFrame, column_name: str) -> dict:
     """

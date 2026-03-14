@@ -1,4 +1,19 @@
+/**
+ * 文件名: client.ts
+ * 编辑时间: 2025-03-14
+ * 代码编写人: Lambert tang
+ * 描述: API 客户端，封装数据源、规则集、任务、报告、用户等接口
+ */
 import axios from 'axios'
+
+const TOKEN_KEY = 'token'
+const TOKEN_STORAGE: Storage = typeof sessionStorage !== 'undefined' ? sessionStorage : localStorage
+
+export const tokenStorage = {
+  get: () => TOKEN_STORAGE.getItem(TOKEN_KEY),
+  set: (token: string) => TOKEN_STORAGE.setItem(TOKEN_KEY, token),
+  remove: () => TOKEN_STORAGE.removeItem(TOKEN_KEY),
+}
 
 const client = axios.create({
   baseURL: '/api/v1',
@@ -7,10 +22,23 @@ const client = axios.create({
 })
 
 client.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  const token = tokenStorage.get()
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
+
+client.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401) {
+      tokenStorage.remove()
+      if (typeof window !== 'undefined' && !window.location.pathname.endsWith('/login')) {
+        window.location.href = '/login'
+      }
+    }
+    return Promise.reject(err)
+  }
+)
 
 export interface Datasource {
   id: string

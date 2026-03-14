@@ -1,3 +1,9 @@
+<!--
+  文件名: UsersView.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 用户管理，增删改查（仅管理员）
+-->
 <template>
   <div class="page-container">
     <PageHeader title="用户管理" subtitle="管理系统用户（仅管理员可见）" />

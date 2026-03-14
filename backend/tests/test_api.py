@@ -1,4 +1,10 @@
-"""API integration tests."""
+# -*- coding: utf-8 -*-
+"""
+文件名: test_api.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: API 集成测试
+"""
 import os
 import sys
 from pathlib import Path
@@ -6,9 +12,11 @@ from pathlib import Path
 backend_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_dir))
 os.chdir(backend_dir)
+os.environ.setdefault("TESTING", "1")  # 禁用登录限流
 
-# Use in-memory SQLite for tests (must set before app import)
-os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+# Use file SQLite for tests (in-memory creates new DB per connection)
+_test_db = backend_dir / "test_api.db"
+os.environ["DATABASE_URL"] = str("sqlite:///" + str(_test_db).replace("\\", "/"))
 
 from fastapi.testclient import TestClient
 from app.main import app
@@ -17,10 +25,32 @@ from seed_data import seed
 
 client = TestClient(app)
 
+_auth_headers: dict | None = None
+
+
+def _get_auth_headers():
+    global _auth_headers
+    if _auth_headers is None:
+        r = client.post("/api/v1/auth/login", json={"username": "admin", "password": "admin123"})
+        assert r.status_code == 200, f"Login failed: {r.text}"
+        token = r.json()["access_token"]
+        _auth_headers = {"Authorization": f"Bearer {token}"}
+    return _auth_headers
+
 
 def setup_module():
+    if _test_db.exists():
+        _test_db.unlink(missing_ok=True)
     init_db()
     seed()
+
+
+def teardown_module():
+    try:
+        if _test_db.exists():
+            _test_db.unlink(missing_ok=True)
+    except PermissionError:
+        pass  # Windows: SQLite 仍占用文件，下次运行会覆盖
 
 
 def test_root():
@@ -30,7 +60,7 @@ def test_root():
 
 
 def test_list_datasources():
-    r = client.get("/api/v1/datasources")
+    r = client.get("/api/v1/datasources", headers=_get_auth_headers())
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
@@ -40,7 +70,7 @@ def test_list_datasources():
 
 
 def test_list_rule_sets():
-    r = client.get("/api/v1/rule-sets")
+    r = client.get("/api/v1/rule-sets", headers=_get_auth_headers())
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
@@ -48,8 +78,9 @@ def test_list_rule_sets():
 
 
 def test_run_task():
-    ds = client.get("/api/v1/datasources").json()
-    rs = client.get("/api/v1/rule-sets").json()
+    h = _get_auth_headers()
+    ds = client.get("/api/v1/datasources", headers=h).json()
+    rs = client.get("/api/v1/rule-sets", headers=h).json()
     assert len(ds) and len(rs)
 
     r = client.post(
@@ -59,6 +90,7 @@ def test_run_task():
             "datasource_ids": [ds[0]["id"]],
             "rule_set_id": rs[0]["id"],
         },
+        headers=h,
     )
     assert r.status_code == 200
     data = r.json()
@@ -70,8 +102,9 @@ def test_run_task():
 
 
 def test_get_report():
-    ds = client.get("/api/v1/datasources").json()
-    rs = client.get("/api/v1/rule-sets").json()
+    h = _get_auth_headers()
+    ds = client.get("/api/v1/datasources", headers=h).json()
+    rs = client.get("/api/v1/rule-sets", headers=h).json()
     run_r = client.post(
         "/api/v1/tasks/run",
         json={
@@ -79,10 +112,11 @@ def test_get_report():
             "datasource_ids": [ds[0]["id"]],
             "rule_set_id": rs[0]["id"],
         },
+        headers=h,
     )
     task_id = run_r.json()["task_id"]
 
-    r = client.get(f"/api/v1/reports/{task_id}")
+    r = client.get(f"/api/v1/reports/{task_id}", headers=h)
     assert r.status_code == 200
     data = r.json()
     assert data["task_id"] == task_id
@@ -91,8 +125,9 @@ def test_get_report():
 
 
 def test_report_download():
-    ds = client.get("/api/v1/datasources").json()
-    rs = client.get("/api/v1/rule-sets").json()
+    h = _get_auth_headers()
+    ds = client.get("/api/v1/datasources", headers=h).json()
+    rs = client.get("/api/v1/rule-sets", headers=h).json()
     run_r = client.post(
         "/api/v1/tasks/run",
         json={
@@ -100,24 +135,27 @@ def test_report_download():
             "datasource_ids": [ds[0]["id"]],
             "rule_set_id": rs[0]["id"],
         },
+        headers=h,
     )
     task_id = run_r.json()["task_id"]
 
-    r = client.get(f"/api/v1/reports/{task_id}/download?format=json")
+    r = client.get(f"/api/v1/reports/{task_id}/download?format=json", headers=h)
     assert r.status_code == 200
     assert "application/json" in r.headers.get("content-type", "")
 
-    r2 = client.get(f"/api/v1/reports/{task_id}/download?format=html")
+    r2 = client.get(f"/api/v1/reports/{task_id}/download?format=html", headers=h)
     assert r2.status_code == 200
 
 
 def test_profiling():
-    ds = client.get("/api/v1/datasources").json()
+    h = _get_auth_headers()
+    ds = client.get("/api/v1/datasources", headers=h).json()
     assert len(ds) >= 1
 
     r = client.post(
         "/api/v1/profiling",
         json={"datasource_id": ds[0]["id"], "sample_size": 1000},
+        headers=h,
     )
     assert r.status_code == 200
     data = r.json()

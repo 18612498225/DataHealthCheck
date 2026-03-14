@@ -1,3 +1,9 @@
+<!--
+  文件名: LoginView.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 登录页，数据要素科技感风格
+-->
 <template>
   <div class="login-page">
     <div class="login-bg">
@@ -61,7 +67,7 @@ import { reactive, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { DataAnalysis, User, Lock } from '@element-plus/icons-vue'
-import { api } from '../api/client'
+import { api, tokenStorage } from '../api/client'
 
 const router = useRouter()
 const loading = ref(false)
@@ -69,7 +75,7 @@ const loading = ref(false)
 const form = reactive({ username: 'admin', password: 'admin123' })
 
 onMounted(() => {
-  if (localStorage.getItem('token')) {
+  if (tokenStorage.get()) {
     router.replace('/dashboard')
   }
 })
@@ -82,9 +88,9 @@ async function login() {
   loading.value = true
   try {
     const { data } = await api.login(form)
-    localStorage.setItem('token', data.access_token)
+    tokenStorage.set(data.access_token)
     if (data.user_info) {
-      localStorage.setItem('user_info', JSON.stringify(data.user_info))
+      sessionStorage.setItem('user_info', JSON.stringify(data.user_info))
     }
     ElMessage.success('登录成功')
     router.replace('/dashboard')

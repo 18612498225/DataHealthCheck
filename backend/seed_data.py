@@ -1,4 +1,11 @@
-"""Seed database with sample datasources and rule sets."""
+# -*- coding: utf-8 -*-
+"""
+文件名: seed_data.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据库种子脚本，初始化示例数据源、规则集、角色与用户
+"""
+import logging
 import os
 import sys
 from pathlib import Path
@@ -269,10 +276,16 @@ def seed():
         db.add_all([rs_good, rs_nulls, rs_dups, rs_emp, rs_all_pass, rs_dates, rs_timeliness, rs_dates_viol, rs_timeliness_viol, rs_all_viol])
         db.commit()
 
-        print("Seed completed. Datasources: 10, Rule sets: 10, Users: 1 (admin/admin123)")
+        logger = logging.getLogger(__name__)
+        logger.info("Seed completed. Datasources: 10, Rule sets: 10, Users: 1 (admin/admin123)")
     finally:
         db.close()
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     seed()

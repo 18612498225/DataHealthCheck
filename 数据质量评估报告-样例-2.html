@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>数据质量评估报告</title>
+  <style>
+    :root{--primary:#1976d2;--success:#2e7d32;--danger:#c62828;--warning:#ed6c02;--gray:#666;}
+    *{box-sizing:border-box;}
+    body{font-family:"Microsoft YaHei","PingFang SC","SimHei",sans-serif;padding:32px;max-width:960px;margin:0 auto;line-height:1.6;color:#333;}
+    .cover{text-align:center;padding:100px 24px;page-break-after:always;border-bottom:1px solid #eee;}
+    .cover h1{font-size:28px;margin-bottom:24px;color:var(--primary);}
+    .cover .meta{font-size:14px;color:var(--gray);line-height:2;}
+    h1{font-size:22px;border-bottom:2px solid var(--primary);padding-bottom:10px;margin-top:0;}
+    h2{font-size:17px;margin-top:32px;margin-bottom:12px;color:#333;}
+    h3{font-size:15px;margin-top:20px;color:var(--gray);}
+    table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);border-radius:4px;overflow:hidden;}
+    th,td{border:1px solid #e0e0e0;padding:10px 12px;text-align:left;}
+    th{background:linear-gradient(180deg,#f8f9fa 0%,#eef0f2 100%);font-weight:600;color:#37474f;}
+    tr:nth-child(even){background:#fafafa;}
+    tr:hover{background:#f5f5f5;}
+    .status-passed{color:var(--success);font-weight:600;}
+    .status-failed,.status-error{color:var(--danger);font-weight:600;}
+    .grade{font-size:26px;font-weight:bold;color:var(--primary);}
+    .grade-优{color:var(--success);}
+    .grade-良{color:var(--primary);}
+    .grade-中{color:var(--warning);}
+    .grade-差{color:var(--danger);}
+    .summary-box{background:#f8f9fa;padding:20px;border-radius:8px;margin:16px 0;border-left:4px solid var(--primary);}
+    .score-flex{display:flex;align-items:center;gap:32px;margin:20px 0;flex-wrap:wrap;}
+    .suggestions ul{margin:12px 0;padding-left:24px;}
+    .suggestions li{margin:8px 0;}
+    @media print{body{padding:16px;}tr:hover{background:transparent;}}
+  </style>
+</head>
+<body>
+<div class="cover">
+  <h1>数据质量评估报告</h1>
+  <div class="meta">
+    <p>编制时间：2026-03-14 22:44:52</p>
+    <p>依据标准：GB/T 36344-2018 信息技术 数据质量评价指标</p>
+    <p>评估任务：评估-全规则通过</p>
+    <p>评估范围：全规则通过 (all_rules_pass)、员工示例 (employees_demo)、含重复数据 (data_with_duplicates)、日期顺序 (dates_order_sample)</p>
+  </div>
+</div>
+
+<h1>数据质量评估报告</h1>
+<p style="color:var(--gray);font-size:14px;">编制时间：2026-03-14 22:44:52 · 依据标准：GB/T 36344-2018 信息技术 数据质量评价指标 · 评估范围：全规则通过 (all_rules_pass)、员工示例 (employees_demo)、含重复数据 (data_with_duplicates)、日期顺序 (dates_order_sample)</p>
+
+<h2>一、执行摘要</h2>
+<div class="summary-box">
+  <p style="margin:0;">本次评估共检查 44 项规则，通过 21 项，失败 23 项，整体通过率 47.73%，质量等级为「差」。 共发现 23 个问题项，需重点关注并整改。</p>
+</div>
+<div class="score-flex">
+  <svg width="120" height="80" xmlns="http://www.w3.org/2000/svg"><path d="M 4 116 A 56 56 0 0 1 116 116" fill="none" stroke="#eee" stroke-width="10"/><path d="M 4 116 A 56 56 0 0 1 116 116" fill="none" stroke="#c62828" stroke-width="10" stroke-dasharray="83.97093079199999 175.92904" stroke-linecap="round"/><text x="60" y="70" text-anchor="middle" font-size="20" font-weight="bold">47.73</text><text x="60" y="88" text-anchor="middle" font-size="11" fill="#666">分</text></svg>
+  <div>
+    <p style="font-size:1.4rem;font-weight:bold;margin:0;">总评分：<span class="grade grade-差">47.73</span> 分</p>
+    <p style="margin:10px 0 0;">质量等级：<span class="grade grade-差">差</span></p>
+    <p style="color:var(--gray);margin:6px 0 0;font-size:14px;">总检查项 44 · 通过 <span style="color:var(--success)">21</span> · 失败 <span style="color:var(--danger)">23</span></p>
+  </div>
+</div>
+
+<h2>二、参与评估的数据样板及得分</h2>
+<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="170" x2="380" y2="170" stroke="#999"/><rect x="40" y="20.0" width="75" height="150.0" fill="#2e7d32" rx="2"/><text x="77" y="192" text-anchor="middle" font-size="9" fill="#333">全规则通过 (a…</text><text x="77" y="16.0" text-anchor="middle" font-size="10" font-weight="bold">100.0</text><rect x="125" y="88.175" width="75" height="81.825" fill="#c62828" rx="2"/><text x="162" y="192" text-anchor="middle" font-size="9" fill="#333">员工示例 (em…</text><text x="162" y="84.175" text-anchor="middle" font-size="10" font-weight="bold">54.55</text><rect x="210" y="142.73" width="75" height="27.27" fill="#c62828" rx="2"/><text x="247" y="192" text-anchor="middle" font-size="9" fill="#333">含重复数据 (d…</text><text x="247" y="138.73" text-anchor="middle" font-size="10" font-weight="bold">18.18</text><rect x="295" y="142.73" width="75" height="27.27" fill="#c62828" rx="2"/><text x="332" y="192" text-anchor="middle" font-size="9" fill="#333">日期顺序 (da…</text><text x="332" y="138.73" text-anchor="middle" font-size="10" font-weight="bold">18.18</text></svg>
+<table><thead><tr><th>数据样板</th><th>得分</th><th>等级</th><th>通过</th><th>失败</th></tr></thead><tbody>
+
+<tr><td>全规则通过 (all_rules_pass)</td><td>100.0</td><td>优</td><td>11</td><td>0</td></tr>
+
+<tr><td>员工示例 (employees_demo)</td><td>54.55</td><td>差</td><td>6</td><td>5</td></tr>
+
+<tr><td>含重复数据 (data_with_duplicates)</td><td>18.18</td><td>差</td><td>2</td><td>9</td></tr>
+
+<tr><td>日期顺序 (dates_order_sample)</td><td>18.18</td><td>差</td><td>2</td><td>9</td></tr>
+
+</tbody></table>
+
+<h2>三、评价指标体系与六维分析</h2>
+<table><thead><tr><th>指标</th><th>检查数</th><th>通过</th><th>失败</th><th>通过率</th><th>等级</th><th>说明</th></tr></thead><tbody>
+
+<tr><td>完整性</td><td>16</td><td>10</td><td>6</td><td>62.5%</td><td>中</td><td>通过率 62.5%，等级「中」。</td></tr>
+
+<tr><td>准确性</td><td>12</td><td>7</td><td>5</td><td>58.33%</td><td>差</td><td>通过率 58.3%，等级「差」。</td></tr>
+
+<tr><td>规范性</td><td>8</td><td>2</td><td>6</td><td>25.0%</td><td>差</td><td>通过率 25.0%，等级「差」。</td></tr>
+
+<tr><td>一致性</td><td>4</td><td>1</td><td>3</td><td>25.0%</td><td>差</td><td>通过率 25.0%，等级「差」。</td></tr>
+
+<tr><td>时效性</td><td>4</td><td>1</td><td>3</td><td>25.0%</td><td>差</td><td>通过率 25.0%，等级「差」。</td></tr>
+
+</tbody></table>
+
+<h2>四、检查明细</h2>
+<table><thead><tr><th>数据源</th><th>规则类型</th><th>列</th><th>状态</th><th>说明</th></tr></thead><tbody><tr><td>全规则通过 (all_rules_pass)</td><td>完整性检查</td><td>id</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>完整性检查</td><td>name</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>完整性检查</td><td>age</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>完整性检查</td><td>email</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>唯一性检查</td><td>id</td><td class="status-passed">通过</td><td>未发现重复值。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>数据类型检查</td><td>age</td><td class="status-passed">通过</td><td>数据类型符合预期。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>数值范围检查</td><td>age</td><td class="status-passed">通过</td><td>共 5 个数值，其中 5 个在指定范围内。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>数值范围检查</td><td>salary</td><td class="status-passed">通过</td><td>共 5 个数值，其中 5 个在指定范围内。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>正则格式检查</td><td>email</td><td class="status-passed">通过</td><td>共 5 个可校验值，5 个符合格式。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>日期顺序检查</td><td>hire_date / end_date</td><td class="status-passed">通过</td><td>全部 5 组日期对均满足顺序要求。</td></tr><tr><td>全规则通过 (all_rules_pass)</td><td>时效性检查</td><td>hire_date</td><td class="status-passed">通过</td><td>全部 5 个可解析日期均在规定范围内。</td></tr><tr><td>员工示例 (employees_demo)</td><td>完整性检查</td><td>id</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>员工示例 (employees_demo)</td><td>完整性检查</td><td>name</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>员工示例 (employees_demo)</td><td>完整性检查</td><td>age</td><td class="status-failed">失败</td><td>发现 1 个缺失值。</td></tr><tr><td>员工示例 (employees_demo)</td><td>完整性检查</td><td>email</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>员工示例 (employees_demo)</td><td>唯一性检查</td><td>id</td><td class="status-passed">通过</td><td>未发现重复值。</td></tr><tr><td>员工示例 (employees_demo)</td><td>数据类型检查</td><td>age</td><td class="status-failed">失败</td><td>数据类型不匹配。</td></tr><tr><td>员工示例 (employees_demo)</td><td>数值范围检查</td><td>age</td><td class="status-passed">通过</td><td>共 4 个数值，其中 4 个在指定范围内。</td></tr><tr><td>员工示例 (employees_demo)</td><td>数值范围检查</td><td>salary</td><td class="status-passed">通过</td><td>共 5 个数值，其中 5 个在指定范围内。</td></tr><tr><td>员工示例 (employees_demo)</td><td>正则格式检查</td><td>email</td><td class="status-failed">失败</td><td>共 5 个可校验值，4 个符合格式，1 个不符合。</td></tr><tr><td>员工示例 (employees_demo)</td><td>日期顺序检查</td><td>hire_date / end_date</td><td class="status-error">错误</td><td>未找到列：end_date。</td></tr><tr><td>员工示例 (employees_demo)</td><td>时效性检查</td><td>hire_date</td><td class="status-failed">失败</td><td>4 个可解析日期超出规定时间范围。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>完整性检查</td><td>id</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>完整性检查</td><td>name</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>完整性检查</td><td>age</td><td class="status-error">错误</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>完整性检查</td><td>email</td><td class="status-error">错误</td><td>Column 'email' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>唯一性检查</td><td>id</td><td class="status-failed">失败</td><td>发现 1 个重复值。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>数据类型检查</td><td>age</td><td class="status-error">错误</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>数值范围检查</td><td>age</td><td class="status-error">错误</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>数值范围检查</td><td>salary</td><td class="status-error">错误</td><td>Column 'salary' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>正则格式检查</td><td>email</td><td class="status-error">错误</td><td>Column 'email' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>日期顺序检查</td><td>hire_date / end_date</td><td class="status-error">错误</td><td>未找到列：hire_date, end_date。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>时效性检查</td><td>hire_date</td><td class="status-error">错误</td><td>Column 'hire_date' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>完整性检查</td><td>id</td><td class="status-passed">通过</td><td>未发现缺失值。</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>完整性检查</td><td>name</td><td class="status-error">错误</td><td>Column 'name' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>完整性检查</td><td>age</td><td class="status-error">错误</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>完整性检查</td><td>email</td><td class="status-error">错误</td><td>Column 'email' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>唯一性检查</td><td>id</td><td class="status-passed">通过</td><td>未发现重复值。</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>数据类型检查</td><td>age</td><td class="status-error">错误</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>数值范围检查</td><td>age</td><td class="status-error">错误</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>数值范围检查</td><td>salary</td><td class="status-error">错误</td><td>Column 'salary' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>正则格式检查</td><td>email</td><td class="status-error">错误</td><td>Column 'email' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>日期顺序检查</td><td>hire_date / end_date</td><td class="status-error">错误</td><td>未找到列：hire_date。</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>时效性检查</td><td>hire_date</td><td class="status-error">错误</td><td>Column 'hire_date' not found in DataFrame.</td></tr></tbody></table>
+
+<h2>五、问题统计</h2>
+<table><thead><tr><th>数据源</th><th>规则类型</th><th>列</th><th>问题描述</th></tr></thead><tbody><tr><td>员工示例 (employees_demo)</td><td>完整性检查</td><td>age</td><td>发现 1 个缺失值。</td></tr><tr><td>员工示例 (employees_demo)</td><td>数据类型检查</td><td>age</td><td>数据类型不匹配。</td></tr><tr><td>员工示例 (employees_demo)</td><td>正则格式检查</td><td>email</td><td>共 5 个可校验值，4 个符合格式，1 个不符合。</td></tr><tr><td>员工示例 (employees_demo)</td><td>日期顺序检查</td><td>hire_date / end_date</td><td>未找到列：end_date。</td></tr><tr><td>员工示例 (employees_demo)</td><td>时效性检查</td><td>hire_date</td><td>4 个可解析日期超出规定时间范围。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>完整性检查</td><td>age</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>完整性检查</td><td>email</td><td>Column 'email' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>唯一性检查</td><td>id</td><td>发现 1 个重复值。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>数据类型检查</td><td>age</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>数值范围检查</td><td>age</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>数值范围检查</td><td>salary</td><td>Column 'salary' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>正则格式检查</td><td>email</td><td>Column 'email' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>日期顺序检查</td><td>hire_date / end_date</td><td>未找到列：hire_date, end_date。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>时效性检查</td><td>hire_date</td><td>Column 'hire_date' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>完整性检查</td><td>name</td><td>Column 'name' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>完整性检查</td><td>age</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>完整性检查</td><td>email</td><td>Column 'email' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>数据类型检查</td><td>age</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>数值范围检查</td><td>age</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>数值范围检查</td><td>salary</td><td>Column 'salary' not found in DataFrame.</td></tr></tbody></table>
+
+<h2>六、改进建议</h2>
+<div class="suggestions"><ul><li>建议补充缺失数据，确保关键字段完整。</li><li>建议去重或修正主键/业务键重复问题。</li><li>建议按数据标准规范字段格式与类型。</li><li>建议校验数值是否在合理范围内。</li><li>建议检查日期顺序逻辑（如开始日期≤结束日期）。</li><li>建议检查数据时效性，确保在有效时间窗口内。</li></ul></div>
+
+<h2>附录</h2>
+<h3>附录A 数据说明</h3>
+<table><thead><tr><th>数据对象</th><th>说明</th></tr></thead><tbody><tr><td>全规则通过 (all_rules_pass)</td><td>评估对象</td></tr><tr><td>员工示例 (employees_demo)</td><td>评估对象</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>评估对象</td></tr><tr><td>日期顺序 (dates_order_sample)</td><td>评估对象</td></tr></tbody></table>
+<h3>附录B 规则明细</h3>
+<table><thead><tr><th>规则类型</th><th>列</th><th>评价指标</th></tr></thead><tbody><tr><td>完整性检查</td><td>id</td><td>完整性</td></tr><tr><td>完整性检查</td><td>name</td><td>完整性</td></tr><tr><td>完整性检查</td><td>age</td><td>完整性</td></tr><tr><td>完整性检查</td><td>email</td><td>完整性</td></tr><tr><td>唯一性检查</td><td>id</td><td>准确性</td></tr><tr><td>数据类型检查</td><td>age</td><td>规范性</td></tr><tr><td>数值范围检查</td><td>age</td><td>准确性</td></tr><tr><td>数值范围检查</td><td>salary</td><td>准确性</td></tr><tr><td>正则格式检查</td><td>email</td><td>规范性</td></tr><tr><td>日期顺序检查</td><td>hire_date/end_date</td><td>一致性</td></tr><tr><td>时效性检查</td><td>hire_date</td><td>时效性</td></tr></tbody></table>
+<h3>附录C 问题样例</h3>
+<table><thead><tr><th>数据源</th><th>规则类型</th><th>问题描述</th></tr></thead><tbody><tr><td>员工示例 (employees_demo)</td><td>完整性检查</td><td>发现 1 个缺失值。</td></tr><tr><td>员工示例 (employees_demo)</td><td>数据类型检查</td><td>数据类型不匹配。</td></tr><tr><td>员工示例 (employees_demo)</td><td>正则格式检查</td><td>共 5 个可校验值，4 个符合格式，1 个不符合。</td></tr><tr><td>员工示例 (employees_demo)</td><td>日期顺序检查</td><td>未找到列：end_date。</td></tr><tr><td>员工示例 (employees_demo)</td><td>时效性检查</td><td>4 个可解析日期超出规定时间范围。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>完整性检查</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>完整性检查</td><td>Column 'email' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>唯一性检查</td><td>发现 1 个重复值。</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>数据类型检查</td><td>Column 'age' not found in DataFrame.</td></tr><tr><td>含重复数据 (data_with_duplicates)</td><td>数值范围检查</td><td>Column 'age' not found in DataFrame.</td></tr></tbody></table>
+</body></html>

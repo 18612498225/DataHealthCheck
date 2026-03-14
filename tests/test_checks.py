@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: test_checks.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据质量检查规则单元测试
+"""
+
+# -*- coding: utf-8 -*-
+"""
+文件名: test_checks.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据质量检查函数单元测试（完整性、唯一性、类型、范围等）
+"""
 import pytest
 import pandas as pd
 from data_quality_tool.checks import (

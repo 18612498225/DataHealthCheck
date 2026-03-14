@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: assessment_engine.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据质量评估引擎，按规则执行检查
+"""
 import pandas as pd
 from .checks import (
     check_completeness,
@@ -11,14 +18,14 @@ from .checks import (
 
 class AssessmentEngine:
     """
-    A class to perform data quality assessments on a pandas DataFrame.
+    数据质量评估引擎：对 DataFrame 执行一系列质量检查
     """
     def __init__(self, dataframe: pd.DataFrame):
         """
-        Initializes the AssessmentEngine with a pandas DataFrame.
+        初始化评估引擎
 
         Args:
-            dataframe: The pandas DataFrame to be assessed.
+            dataframe: 待评估的 pandas DataFrame
         """
         self.dataframe = dataframe
         self.check_functions = {
@@ -33,14 +40,13 @@ class AssessmentEngine:
 
     def run_checks(self, rules: list) -> list:
         """
-        Runs a series of data quality checks based on the provided rules.
+        根据规则执行数据质量检查
 
         Args:
-            rules: A list of rules (dictionaries) defining the checks to perform.
+            rules: 规则列表（字典），定义要执行的检查
 
         Returns:
-            A list of dictionaries, where each dictionary represents the result
-            of a data quality check.
+            检查结果列表，每项为一条规则的检查结果
         """
         results = []
         for rule in rules:

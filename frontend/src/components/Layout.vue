@@ -1,3 +1,9 @@
+<!--
+  文件名: Layout.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 主布局，侧边栏、用户信息、退出登录
+-->
 <template>
   <el-container class="app-layout">
     <aside class="sidebar">
@@ -40,7 +46,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { api } from '../api/client'
+import { api, tokenStorage } from '../api/client'
 import {
   DataAnalysis,
   Connection,
@@ -52,9 +58,10 @@ import {
 } from '@element-plus/icons-vue'
 
 const userInfo = ref<{ username: string; real_name?: string; role_name?: string; org?: string } | null>(null)
+const userInfoStorage: Storage = typeof sessionStorage !== 'undefined' ? sessionStorage : localStorage
 
 onMounted(async () => {
-  const cached = localStorage.getItem('user_info')
+  const cached = userInfoStorage.getItem('user_info')
   if (cached) {
     try {
       userInfo.value = JSON.parse(cached)
@@ -64,7 +71,7 @@ onMounted(async () => {
     const { data } = await api.getMe()
     if (data) {
       userInfo.value = data
-      localStorage.setItem('user_info', JSON.stringify(data))
+      userInfoStorage.setItem('user_info', JSON.stringify(data))
     }
   } catch {}
 })
@@ -93,8 +100,8 @@ function isActive(path: string) {
 }
 
 function logout() {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user_info')
+  tokenStorage.remove()
+  userInfoStorage.removeItem('user_info')
   router.push('/login')
 }
 </script>

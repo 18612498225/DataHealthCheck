@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: data_loader.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据加载服务，支持 CSV、Excel、PostgreSQL、MySQL
+"""
+
+# -*- coding: utf-8 -*-
+"""
+文件名: data_loader.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据加载服务，支持 CSV、Excel、PostgreSQL、MySQL 等数据源
+"""
 import os
 import sys
 from pathlib import Path

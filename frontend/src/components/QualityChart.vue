@@ -1,3 +1,9 @@
+<!--
+  文件名: QualityChart.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 质量通过/失败饼图组件（ECharts）
+-->
 <template>
   <div ref="chartRef" style="width: 100%; height: 200px" />
 </template>

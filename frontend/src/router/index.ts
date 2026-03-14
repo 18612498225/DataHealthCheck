@@ -1,5 +1,12 @@
+/**
+ * 文件名: index.ts
+ * 编辑时间: 2025-03-14
+ * 代码编写人: Lambert tang
+ * 描述: Vue Router 配置，登录、仪表盘、数据源、规则、任务、报告、剖析、用户
+ */
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '../components/Layout.vue'
+import { tokenStorage } from '../api/client'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,7 +30,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _from, next) => {
-  const token = localStorage.getItem('token')
+  const token = tokenStorage.get()
   if (to.meta.public || token) {
     next()
   } else {

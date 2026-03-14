@@ -1,4 +1,10 @@
-"""Profiling service: load data and run profiling."""
+# -*- coding: utf-8 -*-
+"""
+文件名: profiling.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据画像服务，加载数据并执行列级画像分析
+"""
 from app.services.data_loader import load_data
 
 

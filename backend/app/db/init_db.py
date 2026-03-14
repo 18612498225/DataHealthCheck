@@ -1,5 +1,14 @@
-"""Create tables and optionally seed data."""
+# -*- coding: utf-8 -*-
+"""
+文件名: init_db.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 创建数据库表，执行迁移脚本
+"""
+import logging
 from sqlalchemy import text
+
+logger = logging.getLogger(__name__)
 from app.db.database import engine, Base
 from app.models import Datasource, RuleSet, Task, AssessmentResult, Role, User
 
@@ -102,5 +111,10 @@ def init_db():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     init_db()
-    print("Database tables created.")
+    logger.info("Database tables created.")

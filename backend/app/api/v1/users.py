@@ -1,6 +1,13 @@
-"""User management API (admin only)."""
+# -*- coding: utf-8 -*-
+"""
+文件名: users.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 用户管理 API（仅管理员可操作）
+"""
+import re
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 from typing import Optional
 
@@ -13,7 +20,7 @@ router = APIRouter()
 
 
 def require_admin(username: Optional[str] = Depends(get_current_user), db: Session = Depends(get_db)) -> str:
-    """Require admin role."""
+    """校验管理员角色"""
     if not username:
         raise HTTPException(status_code=401, detail="请先登录")
     user = db.query(User).filter(User.username == username).first()
@@ -25,6 +32,15 @@ def require_admin(username: Optional[str] = Depends(get_current_user), db: Sessi
     return username
 
 
+def _validate_password_strength(v: str) -> str:
+    """密码至少 8 位，含字母和数字"""
+    if len(v) < 8:
+        raise ValueError("密码至少 8 位")
+    if not re.search(r"[a-zA-Z]", v) or not re.search(r"\d", v):
+        raise ValueError("密码须包含字母和数字")
+    return v
+
+
 class UserCreate(BaseModel):
     username: str
     password: str
@@ -32,6 +48,11 @@ class UserCreate(BaseModel):
     email: Optional[str] = None
     org: Optional[str] = None
     role_id: Optional[str] = None
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, v: str) -> str:
+        return _validate_password_strength(v)
 
 
 class UserUpdate(BaseModel):
@@ -65,14 +86,14 @@ class RoleOut(BaseModel):
 
 @router.get("/roles", response_model=list[RoleOut])
 def list_roles(db: Session = Depends(get_db)):
-    """List all roles."""
+    """获取所有角色列表"""
     roles = db.query(Role).all()
     return [RoleOut(id=r.id, name=r.name) for r in roles]
 
 
 @router.get("", response_model=list[UserOut])
 def list_users(_admin: str = Depends(require_admin), db: Session = Depends(get_db)):
-    """List all users (admin only)."""
+    """获取所有用户列表（仅管理员）"""
     users = db.query(User).all()
     result = []
     for u in users:
@@ -94,7 +115,7 @@ def list_users(_admin: str = Depends(require_admin), db: Session = Depends(get_d
 
 @router.post("", response_model=UserOut)
 def create_user(d: UserCreate, _admin: str = Depends(require_admin), db: Session = Depends(get_db)):
-    """Create user (admin only)."""
+    """创建用户（仅管理员）"""
     if db.query(User).filter(User.username == d.username).first():
         raise HTTPException(status_code=400, detail="用户名已存在")
     user = User(
@@ -125,7 +146,7 @@ def create_user(d: UserCreate, _admin: str = Depends(require_admin), db: Session
 
 @router.put("/{user_id}", response_model=UserOut)
 def update_user(user_id: str, d: UserUpdate, _admin: str = Depends(require_admin), db: Session = Depends(get_db)):
-    """Update user (admin only)."""
+    """更新用户（仅管理员）"""
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="用户不存在")
@@ -138,6 +159,7 @@ def update_user(user_id: str, d: UserUpdate, _admin: str = Depends(require_admin
     if d.role_id is not None:
         user.role_id = d.role_id
     if d.password is not None:
+        _validate_password_strength(d.password)
         user.password_hash = hash_password(d.password)
     db.commit()
     db.refresh(user)
@@ -158,7 +180,7 @@ def update_user(user_id: str, d: UserUpdate, _admin: str = Depends(require_admin
 
 @router.delete("/{user_id}")
 def delete_user(user_id: str, admin_username: str = Depends(require_admin), db: Session = Depends(get_db)):
-    """Delete user (admin only). Cannot delete self."""
+    """删除用户（仅管理员），不能删除当前登录用户"""
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="用户不存在")

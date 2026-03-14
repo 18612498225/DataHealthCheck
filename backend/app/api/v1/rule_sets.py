@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: rule_sets.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 规则集管理 API，增删改查
+"""
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db
@@ -9,6 +16,7 @@ router = APIRouter()
 
 
 def model_to_response(m: RuleSet) -> RuleSetResponse:
+    """将规则集模型转为 API 响应格式"""
     rules = json.loads(m.rules) if isinstance(m.rules, str) else m.rules
     dims = json.loads(m.quality_dimensions) if m.quality_dimensions and isinstance(m.quality_dimensions, str) else m.quality_dimensions
     return RuleSetResponse(
@@ -53,7 +61,7 @@ def create_rule_set(d: RuleSetCreate, db: Session = Depends(get_db)):
 def get_rule_set(id: str, db: Session = Depends(get_db)):
     m = db.query(RuleSet).filter(RuleSet.id == id).first()
     if not m:
-        raise HTTPException(status_code=404, detail="Rule set not found")
+        raise HTTPException(status_code=404, detail="规则集未找到")
     return model_to_response(m)
 
 
@@ -61,7 +69,7 @@ def get_rule_set(id: str, db: Session = Depends(get_db)):
 def update_rule_set(id: str, d: RuleSetUpdate, db: Session = Depends(get_db)):
     m = db.query(RuleSet).filter(RuleSet.id == id).first()
     if not m:
-        raise HTTPException(status_code=404, detail="Rule set not found")
+        raise HTTPException(status_code=404, detail="规则集未找到")
     if d.name is not None:
         m.name = d.name
     if d.description is not None:
@@ -83,7 +91,7 @@ def update_rule_set(id: str, d: RuleSetUpdate, db: Session = Depends(get_db)):
 def delete_rule_set(id: str, db: Session = Depends(get_db)):
     m = db.query(RuleSet).filter(RuleSet.id == id).first()
     if not m:
-        raise HTTPException(status_code=404, detail="Rule set not found")
+        raise HTTPException(status_code=404, detail="规则集未找到")
     db.delete(m)
     db.commit()
     return {"ok": True}

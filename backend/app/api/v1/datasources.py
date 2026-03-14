@@ -1,4 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: datasources.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据源管理 API，增删改查、测试连接
+"""
 import json
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db
@@ -7,9 +15,11 @@ from app.schemas.datasource import DatasourceCreate, DatasourceUpdate, Datasourc
 from app.services.data_loader import load_data
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 def model_to_response(m: Datasource) -> DatasourceResponse:
+    """将数据源模型转为 API 响应格式"""
     config = json.loads(m.config) if isinstance(m.config, str) else m.config
     return DatasourceResponse(
         id=m.id,
@@ -42,6 +52,7 @@ def create_datasource(d: DatasourceCreate, db: Session = Depends(get_db)):
     db.add(m)
     db.commit()
     db.refresh(m)
+    logger.info("创建数据源: %s (type=%s)", d.name, d.source_type)
     return model_to_response(m)
 
 
@@ -49,7 +60,7 @@ def create_datasource(d: DatasourceCreate, db: Session = Depends(get_db)):
 def get_datasource(id: str, db: Session = Depends(get_db)):
     m = db.query(Datasource).filter(Datasource.id == id).first()
     if not m:
-        raise HTTPException(status_code=404, detail="Datasource not found")
+        raise HTTPException(status_code=404, detail="数据源未找到")
     return model_to_response(m)
 
 
@@ -57,7 +68,7 @@ def get_datasource(id: str, db: Session = Depends(get_db)):
 def update_datasource(id: str, d: DatasourceUpdate, db: Session = Depends(get_db)):
     m = db.query(Datasource).filter(Datasource.id == id).first()
     if not m:
-        raise HTTPException(status_code=404, detail="Datasource not found")
+        raise HTTPException(status_code=404, detail="数据源未找到")
     if d.name is not None:
         m.name = d.name
     if d.source_type is not None:
@@ -75,7 +86,8 @@ def update_datasource(id: str, d: DatasourceUpdate, db: Session = Depends(get_db
 def delete_datasource(id: str, db: Session = Depends(get_db)):
     m = db.query(Datasource).filter(Datasource.id == id).first()
     if not m:
-        raise HTTPException(status_code=404, detail="Datasource not found")
+        raise HTTPException(status_code=404, detail="数据源未找到")
+    logger.info("删除数据源: id=%s", id)
     db.delete(m)
     db.commit()
     return {"ok": True}
@@ -83,12 +95,14 @@ def delete_datasource(id: str, db: Session = Depends(get_db)):
 
 @router.post("/{id}/test")
 def test_datasource(id: str, db: Session = Depends(get_db)):
-    """Test connection / load data from datasource."""
+    """测试数据源连接/加载数据"""
     m = db.query(Datasource).filter(Datasource.id == id).first()
     if not m:
-        raise HTTPException(status_code=404, detail="Datasource not found")
+        raise HTTPException(status_code=404, detail="数据源未找到")
     config = json.loads(m.config) if isinstance(m.config, str) else m.config
     df = load_data(m.source_type, config)
     if df is None:
+        logger.warning("数据源测试失败: id=%s name=%s", id, m.name)
         return {"ok": False, "message": "Failed to load data"}
+    logger.info("数据源测试成功: id=%s name=%s rows=%d cols=%d", id, m.name, len(df), len(df.columns))
     return {"ok": True, "message": f"Loaded {len(df)} rows, {len(df.columns)} columns"}

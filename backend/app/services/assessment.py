@@ -1,5 +1,22 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: assessment.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据质量评估服务，调用 AssessmentEngine 执行规则检查
+"""
+
+# -*- coding: utf-8 -*-
+"""
+文件名: assessment.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据质量评估服务，调用 AssessmentEngine 执行规则检查
+"""
 import sys
 from pathlib import Path
+
+
 
 # Use project root so data_quality_tool resolves to root package
 _project_root = Path(__file__).resolve().parent.parent.parent.parent

@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: test_reporter.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 报告生成器单元测试
+"""
+
+# -*- coding: utf-8 -*-
+"""
+文件名: test_reporter.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 报告生成模块单元测试
+"""
 import pytest
 from data_quality_tool.reporter import generate_text_report
 import os

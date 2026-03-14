@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: report.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据质量报告生成，支持 JSON 与 HTML 格式
+"""
+
+# -*- coding: utf-8 -*-
+"""
+文件名: report.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据质量报告生成服务，支持 JSON 与 HTML 格式输出
+"""
 from jinja2 import Template
 from markupsafe import Markup
 

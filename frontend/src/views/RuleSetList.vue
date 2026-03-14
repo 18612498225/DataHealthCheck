@@ -1,3 +1,9 @@
+<!--
+  文件名: RuleSetList.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 规则集管理，增删改查、JSON 规则编辑
+-->
 <template>
   <div class="page-container">
     <PageHeader title="规则集管理" subtitle="按行业标准定义数据质量检查规则">

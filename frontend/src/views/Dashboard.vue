@@ -1,3 +1,9 @@
+<!--
+  文件名: Dashboard.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 仪表盘，数据质量概览与快捷入口
+-->
 <template>
   <div class="page-container">
     <PageHeader title="仪表盘" subtitle="数据质量概览与快捷入口" />

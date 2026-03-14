@@ -1,5 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: data_loader.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 从 CSV 加载数据
+"""
+import logging
 from typing import Optional
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 def load_csv_data(file_path: str) -> Optional[pd.DataFrame]:
@@ -17,14 +27,14 @@ def load_csv_data(file_path: str) -> Optional[pd.DataFrame]:
         df = pd.read_csv(file_path)
         return df
     except FileNotFoundError:
-        print(f"Error: File not found at path: {file_path}")
+        logger.error("文件不存在: %s", file_path)
         return None
     except pd.errors.EmptyDataError:
-        print(f"Error: File is empty at path: {file_path}")
+        logger.warning("文件为空: %s", file_path)
         return None
     except pd.errors.ParserError:
-        print(f"Error: Could not parse CSV file at path: {file_path}")
+        logger.error("CSV 解析失败: %s", file_path)
         return None
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        logger.exception("加载数据时发生异常: %s", e)
         return None

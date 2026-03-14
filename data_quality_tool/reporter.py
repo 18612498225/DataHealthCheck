@@ -1,3 +1,16 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: reporter.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 生成文本格式数据质量报告
+"""
+import logging
+import sys
+
+logger = logging.getLogger(__name__)
+
+
 def generate_text_report(results: list, output_file_path: str = None):
     """
     Generates a text-based data quality report from assessment results.
@@ -54,10 +67,11 @@ def generate_text_report(results: list, output_file_path: str = None):
         try:
             with open(output_file_path, "w", encoding="utf-8") as f:
                 f.write(report_string)
-            print(f"Report successfully saved to {output_file_path}")
+            logger.info("报告已保存到: %s", output_file_path)
         except IOError as e:
-            print(f"Error writing report to file {output_file_path}: {e}")
-            print("Printing report to console instead:")
-            print(report_string)
+            logger.error("写入报告文件失败 %s: %s", output_file_path, e)
+            sys.stdout.write(report_string)
+            sys.stdout.write("\n")
     else:
-        print(report_string)
+        sys.stdout.write(report_string)
+        sys.stdout.write("\n")

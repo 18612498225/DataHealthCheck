@@ -1,3 +1,9 @@
+<!--
+  文件名: ReportView.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 评估报告，查看与下载 HTML/JSON/PDF
+-->
 <template>
   <div class="page-container">
     <PageHeader title="评估报告" subtitle="查看数据质量评估结果" />

@@ -1,3 +1,9 @@
+<!--
+  文件名: ProfilingView.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 数据剖析，列级统计与规则推荐
+-->
 <template>
   <div class="page-container">
     <PageHeader title="数据剖析" subtitle="对数据源进行列级统计与规则推荐" />

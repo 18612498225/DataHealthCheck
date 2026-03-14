@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+文件名: tasks.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 任务执行 API，运行评估任务、查看任务列表与详情
+"""
 import logging
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -16,7 +23,7 @@ router = APIRouter()
 
 
 def _resolve_mappings(d: TaskRun) -> list[tuple[str, str, dict | None]]:
-    """Return list of (datasource_id, rule_set_id, column_mapping)."""
+    """解析任务配置，返回 (数据源id, 规则集id, 列映射) 列表"""
     if d.datasource_rule_mappings:
         return [
             (
@@ -39,6 +46,7 @@ def run_task(d: TaskRun, db: Session = Depends(get_db)):
     if not mappings:
         raise HTTPException(status_code=400, detail="请选择至少一个数据源并配置规则集")
 
+    logger.info("任务开始: name=%s 数据源数=%d", d.name, len(mappings))
     task = Task(
         name=d.name,
         datasource_id=mappings[0][0],  # legacy NOT NULL; 满足数据库约束
@@ -62,11 +70,11 @@ def run_task(d: TaskRun, db: Session = Depends(get_db)):
         for ds_id, rule_set_id, col_map in mappings:
             rs = db.query(RuleSet).filter(RuleSet.id == rule_set_id).first()
             if not rs:
-                raise HTTPException(status_code=404, detail=f"Rule set {rule_set_id} not found")
+                raise HTTPException(status_code=404, detail=f"规则集 {rule_set_id} 未找到")
             rules = json.loads(rs.rules) if isinstance(rs.rules, str) else rs.rules
             ds = db.query(Datasource).filter(Datasource.id == ds_id).first()
             if not ds:
-                raise HTTPException(status_code=404, detail=f"Datasource {ds_id} not found")
+                raise HTTPException(status_code=404, detail=f"数据源 {ds_id} 未找到")
             config = json.loads(ds.config) if isinstance(ds.config, str) else ds.config
             results, err = run_assessment(ds.source_type, config, rules, column_mapping=col_map)
             if err:
@@ -92,6 +100,7 @@ def run_task(d: TaskRun, db: Session = Depends(get_db)):
         task.status = "completed"
         task.finished_at = datetime.utcnow()
         db.commit()
+        logger.info("任务完成: task_id=%s 数据源数=%d", task.id, len(by_datasource))
 
         return {
             "task_id": task.id,
@@ -109,6 +118,7 @@ def run_task(d: TaskRun, db: Session = Depends(get_db)):
 
 
 def _task_to_response(m: Task) -> TaskResponse:
+    """将任务模型转为 API 响应格式"""
     ids = []
     if m.datasource_ids:
         try:
@@ -138,7 +148,7 @@ def list_tasks(db: Session = Depends(get_db)):
 def get_task(id: str, db: Session = Depends(get_db)):
     task = db.query(Task).filter(Task.id == id).first()
     if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
+        raise HTTPException(status_code=404, detail="任务未找到")
     ar = db.query(AssessmentResult).filter(AssessmentResult.task_id == id).first()
     result = None
     if ar:

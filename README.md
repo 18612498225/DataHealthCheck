@@ -12,6 +12,43 @@
 *   **数据类型检查**: 验证指定列的数据类型是否符合预期 (如 `int64`, `float64`, `object` 等)。
 *   **报告生成**: 生成文本格式的评估报告，总结检查结果，并可选择输出到文件或控制台。
 
+## 技术栈
+
+### 前端
+
+| 类别 | 技术 |
+|------|------|
+| 框架 | Vue 3 |
+| 路由 | Vue Router |
+| UI 组件库 | Element Plus |
+| HTTP 客户端 | Axios |
+| 图表 | ECharts |
+| 构建工具 | Vite |
+| 类型 | TypeScript |
+
+### 后端
+
+| 类别 | 技术 |
+|------|------|
+| 框架 | FastAPI |
+| 服务 | Uvicorn |
+| 数据校验 | Pydantic / pydantic-settings |
+| ORM | SQLAlchemy |
+| 数据处理 | Pandas |
+| 模板 | Jinja2 |
+| 文件处理 | openpyxl（Excel） |
+| 数据库 | PostgreSQL（psycopg2）、MySQL（pymysql） |
+| 安全 | bcrypt、PyJWT |
+| 报告 | xhtml2pdf（PDF 生成） |
+
+### 核心引擎（CLI）
+
+| 类别 | 技术 |
+|------|------|
+| 语言 | Python 3.8+ |
+| 数据处理 | Pandas |
+| 规则引擎 | 自研（data_quality_tool） |
+
 ## 项目结构
 
 ```

@@ -1,4 +1,10 @@
-"""Data profiling module: column statistics and suggested rules."""
+# -*- coding: utf-8 -*-
+"""
+文件名: profiling.py
+编辑时间: 2025-03-14
+代码编写人: Lambert tang
+描述: 数据剖析模块，列级统计与规则推荐
+"""
 from typing import Optional
 import pandas as pd
 

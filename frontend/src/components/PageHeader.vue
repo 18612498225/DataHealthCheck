@@ -1,3 +1,9 @@
+<!--
+  文件名: PageHeader.vue
+  编辑时间: 2025-03-14
+  代码编写人: Lambert tang
+  描述: 页面标题组件，标题、副标题、插槽
+-->
 <template>
   <div class="page-header">
     <div class="page-header-main">

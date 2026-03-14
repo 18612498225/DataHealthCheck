@@ -1,5 +1,8 @@
 /**
- * Element Plus 主题覆盖 - 适配 Material Design 3
+ * 文件名: element-overrides.css
+ * 编辑时间: 2025-03-14
+ * 代码编写人: Lambert tang
+ * 描述: Element Plus 主题覆盖，适配 Material Design 3
  */
 :root {
   --el-color-primary: #1976d2;
